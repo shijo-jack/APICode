@@ -5,10 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fresco.codelab.model.CodeLabRepo;
 import com.fresco.codelab.model.CodeLabUser;
@@ -40,7 +39,7 @@ public class DashboardService {
 				break;
 			}
 		}
-		return labUser;	
+		return labUser;
 	}
 	
 	public void save(CodeLabRepo codeLabRepo) {
@@ -48,13 +47,16 @@ public class DashboardService {
 	}
 	
 	public List<CodeLabRepo> getCodeLabRepoWithOwnerId(Long ownerId){
-		List<CodeLabRepo> codeLabRepoList = new ArrayList<CodeLabRepo>();
-		codeLabRepoList = codeLabRepoRepo.findAll();
+		System.out.println("in");
+		List<CodeLabRepo> codeLabRepoListFinal = new ArrayList<CodeLabRepo>();
+		List<CodeLabRepo> codeLabRepoList = codeLabRepoRepo.findAll();
+		System.out.println("in: "+codeLabRepoList.toString());
 		for(CodeLabRepo repo: codeLabRepoList) {
 			if(ownerId.equals(repo.getRepoOwnerId())) {
-				codeLabRepoList.add(repo);
+				codeLabRepoListFinal.add(repo);
 			}
 		}
+		System.out.println("in: "+codeLabRepoList.size());
 		return codeLabRepoList;
 	}
 
@@ -71,7 +73,12 @@ public class DashboardService {
 	
 	public List<CodeLabRepo> getCodeLabRepoWithRepoId(Long repoId) {
 		Optional<CodeLabRepo> codeLabRepo = codeLabRepoRepo.findById(repoId);
-		return codeLabRepo.map(value -> new ArrayList<CodeLabRepo>(Arrays.asList(value)))
+		List<CodeLabRepo> codeLabRepoList = codeLabRepo.map(value -> new ArrayList<CodeLabRepo>(Arrays.asList(value)))
 			    .orElseGet(() -> new ArrayList<CodeLabRepo>());
+		if(codeLabRepoList!=null && !codeLabRepoList.isEmpty()) {
+			return codeLabRepoList;
+		}else {
+			return new ArrayList<CodeLabRepo>();
+		}
 	}
 }
