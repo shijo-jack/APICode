@@ -2,6 +2,8 @@ package com.fresco.codelab.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -44,5 +46,20 @@ public class DashboardService {
 	public void save(CodeLabRepo codeLabRepo) {
 		codeLabRepoRepo.save(codeLabRepo);
 	}
+	
+	public List<CodeLabRepo> getCodeLabRepoWithOwnerId(Long ownerId){
+		List<CodeLabRepo> codeLabRepoList = new ArrayList<CodeLabRepo>();
+		codeLabRepoList = codeLabRepoRepo.findAll();
+		for(CodeLabRepo repo: codeLabRepoList) {
+			if(ownerId.equals(repo.getRepoOwnerId())) {
+				codeLabRepoList.add(repo);
+			}
+		}
+		return codeLabRepoList;
+	}
 
+	public List<CodeLabRepo> getAllCodeLabRepo(){
+		List<CodeLabRepo> codeLabRepoList = codeLabRepoRepo.findAll();
+		return codeLabRepoList;
+	}
 }

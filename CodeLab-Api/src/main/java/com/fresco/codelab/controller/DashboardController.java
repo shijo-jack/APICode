@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fresco.codelab.model.CodeLabRepo;
 import com.fresco.codelab.service.DashboardService;
@@ -23,16 +24,19 @@ public class DashboardController{
 	}
 	
 	@GetMapping
-	public String viewHomePage() {
-		return "homepage.jsp";
+	public ModelAndView viewHomePage() {
+		ModelAndView model = new ModelAndView("homepage.jsp");
+		model.addObject("myrepos", dashboardService.getCodeLabRepoWithOwnerId(userAutoGenId));
+		model.addObject("Allrepos", dashboardService.getAllCodeLabRepo());
+		return model;
 	}
 
 	@PostMapping("/createnewrepo")
-	public String createnewrepo(String repo_name) {
+	public ModelAndView createnewrepo(String repo_name) {
 		if(userAutoGenId!=null) {
 			dashboardService.save(new CodeLabRepo(repo_name, userAutoGenId, null, null));
 		}
-		return "repodashboardpage.jsp";
+		return new ModelAndView("redirect:/dashboard/");
 	}
 
 }
