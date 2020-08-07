@@ -1,0 +1,35 @@
+Hi this hands on is post developing database for our CodeLab application.
+So far we have developed database and services which perform operations on the database. Now we need to wrap them inside APIs so that we can call them from a client.
+
+create the following APIs
+
+/register - GET - returns the view
+registration.jsp
+
+/login - GET - returns the view
+loginpage.jsp
+
+/register - POST - takes 3 form parameters
+"fullname", "username", "password" and registers the user into the database
+
+/dashboard/createnewrepo - POST - takes a parameter "repo_name" and creates a repo in the database with owner id as logged in user id.
+On successfull completion it should redirect to /dashboard/
+
+/dashboard - GET - which should return the view homepage.jsp with two models:
+myrepos – repos which the logged in user owns.
+Allrepos – repos which the logged in user has developer access to
+
+/dashboard/openrepo/{repoId} – GET – should return view repodashboardpage.jsp with two models
+repo – the CodeLabRepo which the user is in, repoOwner – CodeLabUser object of the repo owner
+
+/dashboard/uploadcode/{repoId} – POST – takes a file of .zip format with name file save the file in /uploads folder and extract all the contents of the zip to a folder with name {repoId}-{version} code
+(for example if repoId is 2 and version is 1 then folder name will be 2-1code). After successful completion redirect to /dashboard/openrepo/{repoId}
+
+/openrepo/{repoId}/version/{version} – GET – should return a view repocodepage.jsp with the models:
+repo – CodeLabRepo of the current repo, repoCode – which contains  all the files of the version(files in the folder 2 – 1 code) as a map with key as file name and value as length of file and content stored as list. Example {“sample.txt”:[“11”, “sample text”]}
+
+/dashboard/savecode/{repoId}/{version} – POST – should take filename and code as parameters and update the content of the file in version of the repo with code. Repo id and version is taken from path parameters.
+
+/dashboard/adddeveloper/{repoId} – POST – should  take a parameter developer and add the developer with the username to the repo provided in the path parameter and save it to a database
+
+
